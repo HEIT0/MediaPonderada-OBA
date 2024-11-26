@@ -20,7 +20,7 @@ document.getElementById('calcular').addEventListener('click', function () {
 
   // Função para calcular a nota de uma prova
   function calcularNota(acertos, anuladas) {
-    return ((acertos / (20 - anuladas)) * 10).toFixed(2);
+    return ((acertos / (20 - anuladas)) * 10);
   }
 
   // Calcula as notas de cada prova
@@ -51,15 +51,16 @@ document.getElementById('calcular').addEventListener('click', function () {
   document.getElementById('resultado').textContent =
     `A média ponderada até o momento é: ${mediaPonderada.toFixed(2)}`;
 
-  // Cálculo de estimativa para média 7
+  // Cálculo de estimativa em quantidade de acertos
   if (somaPesos < 6) {
-    const pontosRestantes = 7 * 6 - somaNotas;
-    const pesosRestantes = 6 - somaPesos;
+    const pontosRestantes = 7 * 6 - somaNotas; // Pontos necessários para média 7
+    const pesosRestantes = 6 - somaPesos; // Pesos das provas restantes
 
-    const notaNecessaria = (pontosRestantes / pesosRestantes).toFixed(2);
+    const notaNecessaria = pontosRestantes / pesosRestantes; // Média necessária nas provas restantes
+    const acertosNecessarios = Math.ceil((notaNecessaria / 10) * 20); // Transformar média necessária em acertos
 
     document.getElementById('estimativa').textContent =
-      `Você precisa acertar ${2*notaNecessaria} em cada prova restantes para alcançar a média 7.`;
+      `Você precisa acertar pelo menos ${acertosNecessarios} questões nas provas restantes para alcançar a média 7.`;
   } else {
     document.getElementById('estimativa').textContent =
       `Todas as provas foram feitas.`;
