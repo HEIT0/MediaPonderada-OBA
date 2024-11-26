@@ -1,37 +1,67 @@
-// header scrolling effect
-$(window).on('scroll', function(){
-	if($(window).scrollTop()){
-      $('header').addClass('nav-show');
-		  
-	} 
-	else{
-		$('header').removeClass('nav-show');
-	}
-	   
-})
+document.getElementById('calcular').addEventListener('click', function () {
+  // Capturando os valores inseridos
+  const acertosP1 = parseInt(document.getElementById('acertosP1').value);
+  const anuladasP1 = parseInt(document.getElementById('anuladasP1').value);
+  const acertosP2 = document.getElementById('acertosP2').value ? parseInt(document.getElementById('acertosP2').value) : null;
+  const anuladasP2 = document.getElementById('anuladasP2').value ? parseInt(document.getElementById('anuladasP2').value) : null;
+  const acertosP3 = document.getElementById('acertosP3').value ? parseInt(document.getElementById('acertosP3').value) : null;
+  const anuladasP3 = document.getElementById('anuladasP3').value ? parseInt(document.getElementById('anuladasP3').value) : null;
 
-//hamburger
-const navSlide = () => {
-	 const hamburger = document.querySelector(".hamburger");
-	 const navbar = document.querySelector(".nav-bar");
-	 const navLinks = document.querySelectorAll(".nav-bar li");
+  // Validação
+  if (
+    acertosP1 + anuladasP1 > 20 ||
+    (acertosP2 !== null && acertosP2 + anuladasP2 > 20) ||
+    (acertosP3 !== null && acertosP3 + anuladasP3 > 20)
+  ) {
+    document.getElementById('resultado').textContent =
+      'O total de questões (acertos + anuladas) não pode exceder 20 em cada prova.';
+    return;
+  }
 
-     hamburger.onclick = () => {
-		
-	 navbar.classList.toggle("nav-active");
-		 
-      //Animation links
-	 navLinks.forEach((link, index) => {
-		if (link.style.animation) {
-			link.style.animation = "";
-		} else {
-			link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7+1}s`;
-		   }
-		});
-	  //hamburger animation
-	 hamburger.classList.toggle("toggle");
-    }
-	 
-	}
+  // Função para calcular a nota de uma prova
+  function calcularNota(acertos, anuladas) {
+    return ((acertos / (20 - anuladas)) * 10).toFixed(2);
+  }
 
-window.onload = () => navSlide();
+  // Calcula as notas de cada prova
+  const notaP1 = calcularNota(acertosP1, anuladasP1);
+  const notaP2 = acertosP2 !== null ? calcularNota(acertosP2, anuladasP2) : null;
+  const notaP3 = acertosP3 !== null ? calcularNota(acertosP3, anuladasP3) : null;
+
+  // Calcula a média ponderada
+  let somaPesos = 0;
+  let somaNotas = 0;
+
+  somaNotas += notaP1 * 1;
+  somaPesos += 1;
+
+  if (notaP2 !== null) {
+    somaNotas += notaP2 * 2;
+    somaPesos += 2;
+  }
+
+  if (notaP3 !== null) {
+    somaNotas += notaP3 * 3;
+    somaPesos += 3;
+  }
+
+  const mediaPonderada = somaNotas / somaPesos;
+
+  // Exibindo a média ponderada
+  document.getElementById('resultado').textContent =
+    `A média ponderada até o momento é: ${mediaPonderada.toFixed(2)}`;
+
+  // Cálculo de estimativa para média 7
+  if (somaPesos < 6) {
+    const pontosRestantes = 7 * 6 - somaNotas;
+    const pesosRestantes = 6 - somaPesos;
+
+    const notaNecessaria = (pontosRestantes / pesosRestantes).toFixed(2);
+
+    document.getElementById('estimativa').textContent =
+      `Você precisa acertar ${2*notaNecessaria} nas provas restantes para alcançar a média 7.`;
+  } else {
+    document.getElementById('estimativa').textContent =
+      `Todas as provas foram feitas.`;
+  }
+});
