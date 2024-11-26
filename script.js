@@ -59,7 +59,7 @@ document.getElementById('calcular').addEventListener('click', function () {
     const notaNecessaria = (pontosRestantes / pesosRestantes).toFixed(2);
 
     document.getElementById('estimativa').textContent =
-      `Você precisa acertar ${2*notaNecessaria} nas provas restantes para alcançar a média 7.`;
+      `Você precisa acertar ${2*notaNecessaria} em cada prova restantes para alcançar a média 7.`;
   } else {
     document.getElementById('estimativa').textContent =
       `Todas as provas foram feitas.`;
